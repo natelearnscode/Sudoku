@@ -3,7 +3,7 @@ html, body {
     height: 100vh;
     background: linear-gradient(#77A9BB, #5594AA);
     color: white;
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     overflow: auto;
 }
 
@@ -11,33 +11,36 @@ table {
     margin:1em auto;
     font-size: x-large;
     background: white;
+    box-shadow: 0 5px 15px rgb(0, 65, 102);
 }
 
 tbody, td, tfoot, th, thead, tr {
     border-color: rgb(190, 190, 190);
 }
 td {
-    height:30px;
-    width:30px;
-    text-align:center;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    border-right: 0.5px solid rgb(190, 190, 190);;
+    border-bottom: 0.5px solid rgb(190, 190, 190);;
 }
 
 td:first-child {
-    border-left:solid;
+    border-left: solid black;
 }
 
 td:nth-child(3n) {
-    border-right:solid ;
+    border-right: solid black;
 }
 
 tr:first-child {
-    border-top:solid;
+    border-top: solid black;
 }
 
 tr:nth-child(3n) td {
-    border-bottom:solid;
+    border-bottom: solid black;
 }
 
 #Title {
-    padding: 0 10px;
+    padding: 0;
 }

@@ -15,13 +15,15 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <table id="sudoku-table" class="table table-bordered">
-                    <tbody>
+                <table id="sudoku-table" class="table">
+                    <tbody id="tbody">
                     </tbody>
                 </table>
             </div>
             <div class="col">
                 <h1 class="display-2">Settings/Options</h1>
+                <button class="btn btn-light" onclick="Game.newBoard()">Generate New Board</button>
+                <button class="btn btn-light" onclick="Game.reset()">Reset Current Board</button>
             </div>
         </div>
     </div>
