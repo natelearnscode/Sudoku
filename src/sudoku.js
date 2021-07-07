@@ -1,9 +1,9 @@
-import {Board} from './board.js';
+import { Board } from './board';
+import { Solver } from './solver';
 
 export class Game {
     /* Public */
     static startGame() {
-        this.#table = document.getElementById("sudoku-table");
         this.#initializeGame();
     }
 
@@ -41,10 +41,11 @@ export class Game {
     /* Private */
     static #table;
     static #gameBoard;
-    static #sudokuSolver;
     static #initialBoard;
 
     static #initializeGame() {
+        this.#table = document.getElementById("sudoku-table");
+
         //generate game board
         this.#initialBoard = this.#generateSudokuBoard();
         this.#gameBoard = new Board();
@@ -85,7 +86,7 @@ export class Game {
         ];
 
         let board = new Board();
-        let finishedGrid = board.solveBoard(emptyBoard);
+        let finishedGrid = Solver.solveEmptyBoard(emptyBoard, 0, 0);
 
         let grid = finishedGrid.map(inner => inner.slice(0));
 
@@ -105,7 +106,7 @@ export class Game {
             let gridCopy = grid.map(inner => inner.slice(0));
             gridCopy[rowIndex][columnIndex] = 0;
             let solutions = [[[]]];
-            board.solve(gridCopy, 0, 0, solutions);
+            Solver.solve(gridCopy, 0, 0, solutions);
             if(solutions.length == 2) {
                 //only found one solution not including the empty array
                 grid[rowIndex][columnIndex] = 0;
