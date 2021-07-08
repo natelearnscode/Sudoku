@@ -5,6 +5,7 @@ import Settings from './settings';
 export default class Game {
     /* Public */
     static startGame() {
+        alert('test');
         this.#initializeGame();
     }
 

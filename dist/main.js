@@ -19,6 +19,7 @@ __webpack_require__.r(__webpack_exports__);
 class Game {
     /* Public */
     static startGame() {
+        alert('test');
         this.#initializeGame();
     }
 
@@ -370,65 +371,6 @@ class Board {
     #data;
     #activeRowIndex;
     #activeColumnIndex;
-
-    #getTableRow(table, index) {
-        return table.rows[index];
-    }
-
-    #getTableColumn(table, index) {
-        let columns = Array();
-        for(let i = 0; i < this.#data.length; i++) {
-            columns.push(table.rows[index].cells[i]);
-        }
-        return columns;
-    }
-
-    #getBoxPosition(rowIndex, columnIndex) {
-        let rowBegin;
-        let rowEnd;
-        let columnBegin;
-        let columnEnd;
-        //find where the row begins and ends
-        if(rowIndex < 3) {
-            //one of the 3 boxes from the top row
-            rowBegin = 0;
-            rowEnd = 3;
-        }
-        else if(rowIndex >= 3 && rowIndex < 6) {
-            //one of the 3 boxes from the middle row
-            rowBegin = 3;
-            rowEnd = 6;
-        }
-        else if(rowIndex > 5) {
-            //one of the 3 boxes from the bottom row
-            rowBegin = 6;
-            rowEnd = 9;
-        }
-
-        //find where the column begins and ends
-        if(columnIndex < 3) {
-            //one of the 3 boxes in the left column
-            columnBegin = 0;
-            columnEnd = 3;
-        }
-        else if(columnIndex >= 3 && columnIndex < 6) {
-            //one of the 3 boxes in the middle column
-            columnBegin = 3;
-            columnEnd = 6;
-        }
-        else if(columnIndex > 5) {
-            //one of the 3 boxes in the right column
-            columnBegin = 6;
-            columnEnd = 9;
-        }
-
-        return {
-            rowBegin,
-            rowEnd,
-            columnBegin,
-            columnEnd
-        }
-    }
 }
 
 /***/ }),
@@ -543,7 +485,7 @@ class Solver {
         // check if value is row and column valid
         for (let i = 0; i < 9; i++) {
             if (
-                (data[rowIndex][i] == value && i != columnIndex) 
+                (data[rowIndex][i] == value && i != columnIndex)
                 || (data[i][columnIndex] == value && i != rowIndex)
             ) {
                 return false;
@@ -722,6 +664,7 @@ var __webpack_exports__ = {};
 (() => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sudoku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+
 
 window.Game = _sudoku__WEBPACK_IMPORTED_MODULE_0__.default;
 
