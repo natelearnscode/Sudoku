@@ -1,2 +1,2 @@
-import { Game } from './sudoku';
+import Game from './sudoku';
 window.Game = Game;

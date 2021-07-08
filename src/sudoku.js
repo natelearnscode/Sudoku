@@ -1,7 +1,8 @@
-import { Board } from './board';
-import { Solver } from './solver';
+import Board from './board';
+import Solver from './solver';
+import Settings from './settings';
 
-export class Game {
+export default class Game {
     /* Public */
     static startGame() {
         this.#initializeGame();
@@ -39,22 +40,40 @@ export class Game {
     }
 
     static erase() {
-        if(
-            this.#gameBoard.getActiveRowIndex() != null &&
-            this.#gameBoard.getActiveColumnIndex() != null &&
-            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
-        ) {
-            this.#gameBoard.deleteCurrentCellValue(this.#table);
-        }
+        this.#deleteCellValue();
     }
 
     static updateCell(value) {
-        if(
-            this.#gameBoard.getActiveRowIndex() != null &&
-            this.#gameBoard.getActiveColumnIndex() != null &&
-            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
-        ) {
-            this.#gameBoard.updateCurrentCellValue(this.#table, value);
+        this.#updateCellValue(value);
+    }
+
+    static checkSolution() {
+        //Clear board colors
+
+        let solved = true;
+        const data = this.#gameBoard.getData();
+        for(let i = 0; i < 9; i++) {
+            for(let j = 0; j < 9; j++) {
+                let cell = this.#table.rows[i].cells[j];
+                cell.style.background = Settings.BACKGROUND_COLOR;
+                if(this.#initialBoard[i][j] === 0) {
+                    //player input value 
+                    if(data[i][j] !== this.#finishedGrid[i][j]) {
+                        cell.style.background = Settings.INCORRECT_COLOR;
+                        solved = false;
+                    }
+                    else {
+                        cell.style.background = Settings.CORRECT_COLOR;
+                    }
+                }
+            }
+        }
+
+        if(solved) {
+            alert("Correct solution!");
+        }
+        else {
+            alert("Incorrect solution!");
         }
     }
 
@@ -62,6 +81,7 @@ export class Game {
     static #table;
     static #gameBoard;
     static #initialBoard;
+    static #finishedGrid;
 
     static #initializeGame() {
         this.#table = document.getElementById("sudoku-table");
@@ -105,9 +125,9 @@ export class Game {
             [0,0,0,0,0,0,0,0,0]
         ];
 
-        let finishedGrid = Solver.solveEmptyBoard(emptyBoard, 0, 0);
+        this.#finishedGrid = Solver.solveEmptyBoard(emptyBoard, 0, 0);
 
-        let grid = finishedGrid.map(inner => inner.slice(0));
+        let grid = this.#finishedGrid.map(inner => inner.slice(0));
 
         //Remove cells from the finish grid as long as there is still only one solution
         let numRemovedCells = 30;
@@ -137,24 +157,54 @@ export class Game {
     }
 
     static #handleInput(event) {
+        if(event.key == "Backspace" || event.key == "Delete"){
+            this.#deleteCellValue();
+        }
+        else {
+            this.#updateCellValue(event.key);
+        }
+    }
+
+    static #updateCellValue(value) {
+        const activeRowIndex = this.#gameBoard.getActiveRowIndex();
+        const activeColumnIndex = this.#gameBoard.getActiveColumnIndex();
         if(
-            this.#gameBoard.getActiveRowIndex() != null &&
-            this.#gameBoard.getActiveColumnIndex() != null &&
-            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
+            activeRowIndex != null &&
+            activeColumnIndex != null &&
+            this.#initialBoard[activeRowIndex][activeColumnIndex] == 0
         ) {
             //only allow changing of cell value if not initially given cell
-            if (isFinite(event.key) && event.key != 0) {
+            if (isFinite(value) && value != 0) {
                 //1-9 keys only
-                console.log(event.key);
-                if(this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0) {
-                    this.#gameBoard.updateCurrentCellValue(this.#table, parseInt(event.key));
+                if(this.#initialBoard[activeRowIndex][activeColumnIndex] == 0) {
+                    //update table cells
+                    let cell = this.#table.rows[activeRowIndex].cells[activeColumnIndex];
+                    const intValue = parseInt(value);
+                    cell.innerHTML = value;
+                    if(Settings.showIncorrectValues && this.#finishedGrid[activeRowIndex][activeColumnIndex] !== this.#gameBoard.getData()[activeRowIndex][activeColumnIndex]) {
+                        cell.style.color = Settings.INCORRECT_INPUT_VALUE_COLOR;
+                    }
+                    else {
+                        cell.style.color = Settings.INPUT_VALUE_COLOR;
+                    }
+                    //update game board
+                    this.#gameBoard.updateCurrentCellValue(intValue);
                 }
             }
-            else if(event.key == "Backspace" || event.key == "Delete"){
-                this.#gameBoard.deleteCurrentCellValue(this.#table);
-            }
         }
+    }
 
+    static #deleteCellValue() {
+        const activeRowIndex = this.#gameBoard.getActiveRowIndex();
+        const activeColumnIndex = this.#gameBoard.getActiveColumnIndex();
+        if(
+            activeRowIndex != null &&
+            activeColumnIndex != null &&
+            this.#initialBoard[activeRowIndex][activeColumnIndex] == 0
+        ) {
+                this.#table.rows[activeRowIndex].cells[activeColumnIndex].innerHTML = "&nbsp";
+                this.#gameBoard.deleteCurrentCellValue(this.#table);
+        }
     }
 
     static #changeActiveCell(e) {
@@ -162,6 +212,36 @@ export class Game {
         let cellIndex = e.path[0].cellIndex;
         this.#gameBoard.setActiveRowIndex(rowIndex);
         this.#gameBoard.setActiveColumnIndex(cellIndex);
-        this.#gameBoard.draw(this.#table);
+        this.#highlightTable();        
+    }
+
+    static #highlightTable() {
+        const activeRowIndex = this.#gameBoard.getActiveRowIndex();
+        const activeColumnIndex = this.#gameBoard.getActiveColumnIndex();
+        //reset all cells background color to default
+        for(let i = 0; i < 9; i++) {
+            for(let j = 0; j < 9; j++) {
+                this.#table.rows[i].cells[j].style.background = Settings.BACKGROUND_COLOR;
+                this.#table.rows[i].cells[j].style.fontWeight = "normal";
+            }
+        }
+
+        //change column and row color to lighter than the active cell
+        for(let i = 0; i < 9; i++) {
+            this.#table.rows[i].cells[activeColumnIndex].style.background = Settings.CELL_AFFECT_COLOR;
+            this.#table.rows[activeRowIndex].cells[i].style.background = Settings.CELL_AFFECT_COLOR;
+        }
+
+        //changes 3 by 3 box of active cell to same color as active row and column
+        let boxPos = Solver.getBoxPosition(activeRowIndex, activeColumnIndex);
+        for(let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
+            for(let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
+                this.#table.rows[i].cells[j].style.background = Settings.CELL_AFFECT_COLOR;
+            }
+        }
+
+        //give dark background to active cell and bold the text
+        this.#table.rows[activeRowIndex].cells[activeColumnIndex].style.background = Settings.ACTIVE_CELL_COLOR;
+        this.#table.rows[activeRowIndex].cells[activeColumnIndex].style.fontWeight = "bold";
     }
 }

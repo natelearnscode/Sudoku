@@ -41,7 +41,7 @@
         </div>
         <div class="col text-center">
           <h1 class="display-3">Controls</h1>
-          <p class="lead">Click on the grid and either use your keyboard to input digits or the buttons below.</p>
+          <p class="lead">Click on the grid and either use your keyboard or the buttons below to input digits.</p>
           <div class="btn-group btn-group-lg" role="group" aria-label="Control buttons">
             <button type="button" class="btn btn-outline-info" onclick="Game.erase()">Erase</button>
             <button type="button" class="btn btn-outline-light" onclick="Game.updateCell(1)">1</button>
@@ -56,7 +56,7 @@
           </div>
           <div class="btn-group btn-group-lg" role="group" aria-label="Reset and Check Solution Buttons">
             <button class="btn btn-outline-danger" onclick="Game.reset()">Reset Current Board</button>
-            <button type="button" class="btn btn-outline-success">Check Solution</button>
+            <button type="button" class="btn btn-outline-success" onclick="Game.checkSolution()">Check Solution</button>
           </div>
         </div>
       </div>

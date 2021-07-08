@@ -1,6 +1,4 @@
-import {BACKGROUND_COLOR, ACTIVE_CELL_COLOR, CELL_AFFECT_COLOR} from './settings.js';
-
-export class Board {
+export default class Board {
     /* Public */
     constructor() {
         this.#data = Array();
@@ -30,49 +28,16 @@ export class Board {
         this.#activeColumnIndex = columnIndex;
     }
 
-    draw(table) {
-        //reset all cells background color to default
-        for(let i = 0; i < this.#data.length; i++) {
-            for(let j = 0; j < this.#data[i].length; j++) {
-                table.rows[i].cells[j].style.background = BACKGROUND_COLOR;
-                table.rows[i].cells[j].style.fontWeight = "normal";
-            }
-        }
-
-        //change column and row color to lighter than the active cell
-        for(let i = 0; i < this.#data.length; i++) {
-            table.rows[i].cells[this.#activeColumnIndex].style.background = CELL_AFFECT_COLOR;
-            table.rows[this.#activeRowIndex].cells[i].style.background = CELL_AFFECT_COLOR;
-        }
-
-        //changes 3 by 3 box of active cell to same color as active row and column
-        let boxPos = this.#getBoxPosition(this.#activeRowIndex, this.#activeColumnIndex);
-        for(let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
-            for(let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
-                table.rows[i].cells[j].style.background = CELL_AFFECT_COLOR;
-            }
-        }
-
-        //give dark background to active cell and bold the text
-        table.rows[this.#activeRowIndex].cells[this.#activeColumnIndex].style.background = ACTIVE_CELL_COLOR;
-        table.rows[this.#activeRowIndex].cells[this.#activeColumnIndex].style.fontWeight = "bold";
-    }
-
-    updateCurrentCellValue(table, value) {
+    updateCurrentCellValue(value) {
         if(this.#activeRowIndex != null && this.#activeColumnIndex != null){
-            console.log(this.isValid(this.#activeRowIndex, this.#activeColumnIndex, value, this.#data));
             //update board data
             this.#data[this.#activeRowIndex][this.#activeColumnIndex] = value;
-            //update table cells
-            table.rows[this.#activeRowIndex].cells[this.#activeColumnIndex].innerHTML = value.toString();
-            table.rows[this.#activeRowIndex].cells[this.#activeColumnIndex].style.color = this.isValid(this.#activeRowIndex, this.#activeColumnIndex, value, this.#data) ? "blue" : "red";
         }
     }
 
     deleteCurrentCellValue(table) {
         if(this.#activeRowIndex != null && this.#activeColumnIndex != null) {
             this.#data[this.#activeRowIndex][this.#activeColumnIndex] = 0;
-            table.rows[this.#activeRowIndex].cells[this.#activeColumnIndex].innerHTML = "&nbsp";
         }
     }
 
@@ -86,27 +51,6 @@ export class Board {
             column.push(row[index]);
         });
         return column;
-    }
-
-    isValid(rowIndex, columnIndex, value, data){
-        //check if value is row and column valid
-        for(let i = 0; i < 9; i++) {
-            if((data[rowIndex][i] == value && i != columnIndex) || (data[i][columnIndex] == value && i != rowIndex)) {
-                return false;
-            }
-        }
-
-        //check if value is box valid
-        let boxPos = this.#getBoxPosition(rowIndex, columnIndex);
-        for(let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
-            for(let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
-                if(data[i][j] == value && i != rowIndex && j != columnIndex){
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     /* Private */
