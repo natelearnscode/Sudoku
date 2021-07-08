@@ -78,6 +78,7 @@ export default class Game {
     }
 
     static closeSettings() {
+        // get difficulty settings
         let difficultyRadios = document.getElementsByName('difficulty');
         for(let i = 0; i < difficultyRadios.length; i++) {
             if(i === Settings.difficulty) {
@@ -87,15 +88,36 @@ export default class Game {
                 difficultyRadios[i].checked = false;
             }
         }
+
+        // get show incorrect values settings
+        let showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
+        showIncorrectValuesCheckBox.checked = Settings.showIncorrectValues;
     }
 
     static changeSettings() {
+        // get difficulty settings
         let difficultyRadios = document.getElementsByName('difficulty');
         for(let i = 0; i < difficultyRadios.length; i++) {
             if(difficultyRadios[i].checked) {
                 Settings.difficulty = i;
             }
         }
+
+        // get show incorrect values settings
+        let showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
+        Settings.showIncorrectValues = showIncorrectValuesCheckBox.checked;
+        //color previous incorrect inputs
+        let data = this.#gameBoard.getData();
+        for(let i = 0; i < 9; i++) {
+            for(let j = 0; j < 9; j ++) {
+                if(
+                    this.#initialBoard[i][j] == 0 &&
+                    this.#finishedGrid[i][j] !== data[i][j]) {
+                        this.#table.rows[i].cells[j].style.color = Settings.showIncorrectValues ? Settings.INCORRECT_INPUT_VALUE_COLOR : Settings.INPUT_VALUE_COLOR;
+                }
+            }
+        }
+
     }
 
     /* Private */

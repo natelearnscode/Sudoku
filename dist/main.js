@@ -92,6 +92,7 @@ class Game {
     }
 
     static closeSettings() {
+        // get difficulty settings
         let difficultyRadios = document.getElementsByName('difficulty');
         for(let i = 0; i < difficultyRadios.length; i++) {
             if(i === _settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty) {
@@ -101,16 +102,36 @@ class Game {
                 difficultyRadios[i].checked = false;
             }
         }
+
+        // get show incorrect values settings
+        let showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
+        showIncorrectValuesCheckBox.checked = _settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues;
     }
 
     static changeSettings() {
+        // get difficulty settings
         let difficultyRadios = document.getElementsByName('difficulty');
         for(let i = 0; i < difficultyRadios.length; i++) {
             if(difficultyRadios[i].checked) {
                 _settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty = i;
             }
         }
-        console.log(_settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty);
+
+        // get show incorrect values settings
+        let showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
+        _settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues = showIncorrectValuesCheckBox.checked;
+        //color previous incorrect inputs
+        let data = this.#gameBoard.getData();
+        for(let i = 0; i < 9; i++) {
+            for(let j = 0; j < 9; j ++) {
+                if(
+                    this.#initialBoard[i][j] == 0 &&
+                    this.#finishedGrid[i][j] !== data[i][j]) {
+                        this.#table.rows[i].cells[j].style.color = _settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues ? _settings__WEBPACK_IMPORTED_MODULE_2__.default.INCORRECT_INPUT_VALUE_COLOR : _settings__WEBPACK_IMPORTED_MODULE_2__.default.INPUT_VALUE_COLOR;
+                }
+            }
+        }
+
     }
 
     /* Private */
