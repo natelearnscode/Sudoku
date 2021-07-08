@@ -77,6 +77,27 @@ export default class Game {
         }
     }
 
+    static closeSettings() {
+        let difficultyRadios = document.getElementsByName('difficulty');
+        for(let i = 0; i < difficultyRadios.length; i++) {
+            if(i === Settings.difficulty) {
+                difficultyRadios[i].checked = true;
+            }
+            else {
+                difficultyRadios[i].checked = false;
+            }
+        }
+    }
+
+    static changeSettings() {
+        let difficultyRadios = document.getElementsByName('difficulty');
+        for(let i = 0; i < difficultyRadios.length; i++) {
+            if(difficultyRadios[i].checked) {
+                Settings.difficulty = i;
+            }
+        }
+    }
+
     /* Private */
     static #table;
     static #gameBoard;
@@ -130,7 +151,7 @@ export default class Game {
         let grid = this.#finishedGrid.map(inner => inner.slice(0));
 
         //Remove cells from the finish grid as long as there is still only one solution
-        let numRemovedCells = 30;
+        let numRemovedCells = Settings.getNumberOfInitialEmptyCells();
         while(numRemovedCells > 0) {
             //Pick random row and column indices
             let rowIndex = Math.floor(Math.random() * 9);

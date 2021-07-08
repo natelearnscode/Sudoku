@@ -91,6 +91,28 @@ class Game {
         }
     }
 
+    static closeSettings() {
+        let difficultyRadios = document.getElementsByName('difficulty');
+        for(let i = 0; i < difficultyRadios.length; i++) {
+            if(i === _settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty) {
+                difficultyRadios[i].checked = true;
+            }
+            else {
+                difficultyRadios[i].checked = false;
+            }
+        }
+    }
+
+    static changeSettings() {
+        let difficultyRadios = document.getElementsByName('difficulty');
+        for(let i = 0; i < difficultyRadios.length; i++) {
+            if(difficultyRadios[i].checked) {
+                _settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty = i;
+            }
+        }
+        console.log(_settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty);
+    }
+
     /* Private */
     static #table;
     static #gameBoard;
@@ -144,7 +166,7 @@ class Game {
         let grid = this.#finishedGrid.map(inner => inner.slice(0));
 
         //Remove cells from the finish grid as long as there is still only one solution
-        let numRemovedCells = 30;
+        let numRemovedCells = _settings__WEBPACK_IMPORTED_MODULE_2__.default.getNumberOfInitialEmptyCells();
         while(numRemovedCells > 0) {
             //Pick random row and column indices
             let rowIndex = Math.floor(Math.random() * 9);
@@ -600,8 +622,21 @@ class Settings {
     static INCORRECT_COLOR = 'rgb(255,220,220)'; // Color of the incorrect cells after checking solution
     static INPUT_VALUE_COLOR = 'blue'; // Color of the input text
     static INCORRECT_INPUT_VALUE_COLOR = 'red'; //Color of the input text if it is incorrect and show incorrect values is true
-    static difficulty = difficulties.MEDIUM;
-    static showIncorrectValues = false;
+    static difficulty = difficulties.MEDIUM; //Difficulty of new generated puzzles
+    static showIncorrectValues = false; //Flag that allows the player to see if an input is incorrect if flag is set to true
+
+    static getNumberOfInitialEmptyCells() {
+        switch(this.difficulty) {
+            case difficulties.EASY:
+                return 30;
+            case difficulties.MEDIUM:
+                return 40;
+            case difficulties.HARD:
+                return 50;
+        }
+    }
+
+
 }
 
 /***/ })

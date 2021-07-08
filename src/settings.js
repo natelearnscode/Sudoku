@@ -13,6 +13,19 @@ export default class Settings {
     static INCORRECT_COLOR = 'rgb(255,220,220)'; // Color of the incorrect cells after checking solution
     static INPUT_VALUE_COLOR = 'blue'; // Color of the input text
     static INCORRECT_INPUT_VALUE_COLOR = 'red'; //Color of the input text if it is incorrect and show incorrect values is true
-    static difficulty = difficulties.MEDIUM;
-    static showIncorrectValues = false;
+    static difficulty = difficulties.MEDIUM; //Difficulty of new generated puzzles
+    static showIncorrectValues = false; //Flag that allows the player to see if an input is incorrect if flag is set to true
+
+    static getNumberOfInitialEmptyCells() {
+        switch(this.difficulty) {
+            case difficulties.EASY:
+                return 30;
+            case difficulties.MEDIUM:
+                return 40;
+            case difficulties.HARD:
+                return 50;
+        }
+    }
+
+
 }
