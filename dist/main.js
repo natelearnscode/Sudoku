@@ -26,7 +26,7 @@ class Game {
             this.#table.deleteRow(0);
         }
         this.#initializeGame();
-    };
+    }
 
     static reset() {
         //first delete the old board
@@ -49,7 +49,27 @@ class Game {
                 cell.onclick = this.#changeActiveCell.bind(this);
             }
         }
-    };
+    }
+
+    static erase() {
+        if(
+            this.#gameBoard.getActiveRowIndex() != null &&
+            this.#gameBoard.getActiveColumnIndex() != null &&
+            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
+        ) {
+            this.#gameBoard.deleteCurrentCellValue(this.#table);
+        }
+    }
+
+    static updateCell(value) {
+        if(
+            this.#gameBoard.getActiveRowIndex() != null &&
+            this.#gameBoard.getActiveColumnIndex() != null &&
+            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
+        ) {
+            this.#gameBoard.updateCurrentCellValue(this.#table, value);
+        }
+    }
 
     /* Private */
     static #table;
@@ -98,7 +118,6 @@ class Game {
             [0,0,0,0,0,0,0,0,0]
         ];
 
-        let board = new _board__WEBPACK_IMPORTED_MODULE_0__.Board();
         let finishedGrid = _solver__WEBPACK_IMPORTED_MODULE_1__.Solver.solveEmptyBoard(emptyBoard, 0, 0);
 
         let grid = finishedGrid.map(inner => inner.slice(0));
@@ -128,7 +147,7 @@ class Game {
             }
         }
         return grid;
-    };
+    }
 
     static #handleInput(event) {
         if(
@@ -149,7 +168,7 @@ class Game {
             }
         }
 
-    };
+    }
 
     static #changeActiveCell(e) {
         let rowIndex = e.path[1].rowIndex;
@@ -280,18 +299,6 @@ class Board {
         return true;
     }
 
-    // isSolved(data) {
-    //     //go through board and check if every cell is valid
-    //     for(let i = 0; i < data.length; i++) {
-    //         for(let j = 0; j < data[i].length; j++) {
-    //             if(!this.isValid(i, j, data[i][j], data)) {
-    //                 return false;
-    //             }
-    //         }
-    //     }
-    //     return true;
-    // }
-
     /* Private */
     #data;
     #activeRowIndex;
@@ -371,6 +378,20 @@ const BACKGROUND_COLOR = 'white'; // Color of the non-active cells
 const ACTIVE_CELL_COLOR = 'rgb(200,200,210)'; // Color of the current active cell
 const CELL_AFFECT_COLOR = 'rgb(230,230,240)'; // Color of the row, column, and box of active cell
 
+//Substitute for enums since javascript doesn't support enums
+const difficulties = {
+    EASY: 0,
+    MEDIUM: 1,
+    HARD: 2
+}
+
+class Settings {
+    static BACKGROUND_COLOR = 'white'; // Color of the non-active cells
+    static ACTIVE_CELL_COLOR = 'rgb(200,200,210)'; // Color of the current active cell
+    static CELL_AFFECT_COLOR = 'rgb(230,230,240)'; // Color of the row, column, and box of active cell
+    static difficulty = difficulties.MEDIUM;
+    static showIncorrectValues = false;
+}
 
 /***/ }),
 /* 4 */
@@ -502,6 +523,19 @@ class Solver {
         return true;
     }
 
+    
+    static isSolved(data) {
+        //go through board and check if every cell is valid
+        for(let i = 0; i < data.length; i++) {
+            for(let j = 0; j < data[i].length; j++) {
+                if(!this.isValid(i, j, data[i][j], data)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /* Private */
     static #getBoxPosition(rowIndex, columnIndex) {
         let rowBegin;
@@ -614,11 +648,7 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sudoku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
-// Set onClick event functions
-window.newBoard = (() => _sudoku__WEBPACK_IMPORTED_MODULE_0__.Game.newBoard());
-window.reset = () => _sudoku__WEBPACK_IMPORTED_MODULE_0__.Game.reset();
-// Start game as soon as window loads
-window.onload = _sudoku__WEBPACK_IMPORTED_MODULE_0__.Game.startGame();
+window.Game = _sudoku__WEBPACK_IMPORTED_MODULE_0__.Game;
 
 })();
 

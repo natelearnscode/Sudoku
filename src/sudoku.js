@@ -13,7 +13,7 @@ export class Game {
             this.#table.deleteRow(0);
         }
         this.#initializeGame();
-    };
+    }
 
     static reset() {
         //first delete the old board
@@ -36,7 +36,27 @@ export class Game {
                 cell.onclick = this.#changeActiveCell.bind(this);
             }
         }
-    };
+    }
+
+    static erase() {
+        if(
+            this.#gameBoard.getActiveRowIndex() != null &&
+            this.#gameBoard.getActiveColumnIndex() != null &&
+            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
+        ) {
+            this.#gameBoard.deleteCurrentCellValue(this.#table);
+        }
+    }
+
+    static updateCell(value) {
+        if(
+            this.#gameBoard.getActiveRowIndex() != null &&
+            this.#gameBoard.getActiveColumnIndex() != null &&
+            this.#initialBoard[this.#gameBoard.getActiveRowIndex()][this.#gameBoard.getActiveColumnIndex()] == 0
+        ) {
+            this.#gameBoard.updateCurrentCellValue(this.#table, value);
+        }
+    }
 
     /* Private */
     static #table;
@@ -85,7 +105,6 @@ export class Game {
             [0,0,0,0,0,0,0,0,0]
         ];
 
-        let board = new Board();
         let finishedGrid = Solver.solveEmptyBoard(emptyBoard, 0, 0);
 
         let grid = finishedGrid.map(inner => inner.slice(0));
@@ -115,7 +134,7 @@ export class Game {
             }
         }
         return grid;
-    };
+    }
 
     static #handleInput(event) {
         if(
@@ -136,7 +155,7 @@ export class Game {
             }
         }
 
-    };
+    }
 
     static #changeActiveCell(e) {
         let rowIndex = e.path[1].rowIndex;
