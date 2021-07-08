@@ -102,7 +102,7 @@ export default class Solver {
         // check if value is row and column valid
         for (let i = 0; i < 9; i++) {
             if (
-                (data[rowIndex][i] == value && i != columnIndex) 
+                (data[rowIndex][i] == value && i != columnIndex)
                 || (data[i][columnIndex] == value && i != rowIndex)
             ) {
                 return false;

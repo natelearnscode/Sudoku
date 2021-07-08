@@ -13,5 +13,7 @@ module.exports = {
     rules: {
     // Indent with 4 spaces
         indent: ['error', 4],
+        'linebreak-style': ['error', 'windows'],
+        'no-plusplus': 'off',
     },
 };
