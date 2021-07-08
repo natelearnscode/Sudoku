@@ -1,4 +1,4 @@
 import Game from './sudoku';
 
 window.Game = Game;
-alert('test');
+window.onload = alert('test');
