@@ -270,10 +270,13 @@ class Game {
 
     changeActiveCell(e) {
         console.log(e);
+        e.path.forEach((element) => {
+            console.log(element);
+        });
+        console.log(e.path);
         const { rowIndex } = e.path[1];
         const { cellIndex } = e.path[0];
         console.log(rowIndex, cellIndex);
-        console.log(typeof rowIndex, typeof cellIndex);
         this.gameBoard.setActiveRowIndex(rowIndex);
         this.gameBoard.setActiveColumnIndex(cellIndex);
         this.highlightTable();
