@@ -261,7 +261,7 @@ class Game {
         if (
             activeRowIndex != null
             && activeColumnIndex != null
-            && this.initialBoard[activeRowIndex][activeColumnIndex] == 0
+            && this.initialBoard[activeRowIndex][activeColumnIndex] === 0
         ) {
             this.table.rows[activeRowIndex].cells[activeColumnIndex].innerHTML = '&nbsp';
             this.gameBoard.deleteCurrentCellValue(this.table);
@@ -269,6 +269,7 @@ class Game {
     }
 
     changeActiveCell(e) {
+        console.log(e);
         const { rowIndex } = e.path[1];
         const { cellIndex } = e.path[0];
         this.gameBoard.setActiveRowIndex(rowIndex);
@@ -331,7 +332,7 @@ class Board {
     }
 
     setData(data) {
-        this.data = data.map(inner => inner.slice(0));
+        this.data = data.map((inner) => inner.slice(0));
     }
 
     getActiveRowIndex() {

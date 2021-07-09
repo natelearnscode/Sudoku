@@ -255,6 +255,7 @@ export default class Game {
     }
 
     changeActiveCell(e) {
+        console.log(e);
         const { rowIndex } = e.path[1];
         const { cellIndex } = e.path[0];
         this.gameBoard.setActiveRowIndex(rowIndex);

@@ -11,7 +11,7 @@ export default class Board {
     }
 
     setData(data) {
-        this.data = data.map(inner => inner.slice(0));
+        this.data = data.map((inner) => inner.slice(0));
     }
 
     getActiveRowIndex() {
