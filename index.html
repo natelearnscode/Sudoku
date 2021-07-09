@@ -13,113 +13,116 @@
     <title>Sudoku</title>
   </head>
   <body onload="game.startGame()">
-    <!--Title and Description-->
-    <div class="container TopContainer">
-      <h1 id="Title" class="display-1">Sudoku: </h1>
-      <p id="GameDescription" class="lead">
-        Sudoku is a classic puzzle game in which you try to fill a 9 by 9 grid with the digits 1-9.
-        The goal is for each column, row, and 3 by 3 box to be filled with all the digits from 1 to 9. Digits may not be repeated in a column, row, or box. 
-        For more info, go to Sudoku's <a href="https://en.wikipedia.org/wiki/Sudoku">Wikipedia page</a>.
-      </p>
-    </div>
-    <!--Game-->
-    <div class="container main">
-      <div class="row">
-        <div class="btn-group btn-group-lg" role="group" aria-label="Settings and New Board Button">
-          <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#SettingsModal">
-            Settings/Options
-          </button>
-          <button class="btn btn-outline-success" onclick="game.newBoard()">Generate New Board</button>
+    <div class="wrapper">
+      <!--Title and Description-->
+      <div class="container TopContainer">
+        <h1 id="Title" class="display-1">Sudoku: </h1>
+        <p id="GameDescription" class="lead">
+          Sudoku is a classic puzzle game in which you try to fill a 9 by 9 grid with the digits 1-9.
+          The goal is for each column, row, and 3 by 3 box to be filled with all the digits from 1 to 9. Digits may not be repeated in a column, row, or box. 
+          For more info, go to Sudoku's <a href="https://en.wikipedia.org/wiki/Sudoku">Wikipedia page</a>.
+        </p>
+      </div> 
+      <!--Game-->
+      <div class="container main">
+        <div class="row">
+          <div class="btn-group btn-group-lg" role="group" aria-label="Settings and New Board Button">
+            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#SettingsModal">
+              Settings/Options
+            </button>
+            <button class="btn btn-outline-success" onclick="game.newBoard()">Generate New Board</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <table id="sudoku-table" class="">
+                <tbody id="tbody">
+                </tbody>
+            </table>
+          </div>
+          <div class="col text-center">
+            <h1 class="display-3">Controls</h1>
+            <p class="lead">Click on the grid and either use your keyboard or the buttons below to input digits.</p>
+            <div class="btn-group btn-group-lg" role="group" aria-label="Control buttons 1-4">
+              <button type="button" class="btn btn-outline-info" onclick="game.erase()">Erase</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(1)">1</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(2)">2</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(3)">3</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(4)">4</button>
+            </div>
+            <div class="btn-group btn-group-lg" role="group" aria-label="Control buttons 5-9">
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(5)">5</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(6)">6</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(7)">7</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(8)">8</button>
+              <button type="button" class="btn btn-outline-light" onclick="game.updateCell(9)">9</button>
+            </div>
+            <div class="btn-group btn-group-lg" role="group" aria-label="Reset and Check Solution Buttons">
+              <button class="btn btn-outline-danger" onclick="game.reset()">Reset Current Board</button>
+              <button type="button" class="btn btn-outline-success" onclick="game.checkSolution()">Check Solution</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col">
-          <table id="sudoku-table" class="">
-              <tbody id="tbody">
-              </tbody>
-          </table>
-        </div>
-        <div class="col text-center">
-          <h1 class="display-3">Controls</h1>
-          <p class="lead">Click on the grid and either use your keyboard or the buttons below to input digits.</p>
-          <div class="btn-group btn-group-lg" role="group" aria-label="Control buttons 1-4">
-            <button type="button" class="btn btn-outline-info" onclick="game.erase()">Erase</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(1)">1</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(2)">2</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(3)">3</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(4)">4</button>
-          </div>
-          <div class="btn-group btn-group-lg" role="group" aria-label="Control buttons 5-9">
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(5)">5</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(6)">6</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(7)">7</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(8)">8</button>
-            <button type="button" class="btn btn-outline-light" onclick="game.updateCell(9)">9</button>
-          </div>
-          <div class="btn-group btn-group-lg" role="group" aria-label="Reset and Check Solution Buttons">
-            <button class="btn btn-outline-danger" onclick="game.reset()">Reset Current Board</button>
-            <button type="button" class="btn btn-outline-success" onclick="game.checkSolution()">Check Solution</button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="SettingsModal" tabindex="-1" role="dialog" aria-labelledby="SettingsModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="SettingsModalLabel">Settings</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <fieldset class="form-group">
+                  <div class="row">
+                    <legend class="col-form-label col-sm-2 pt-0">Difficulty Used in Puzzle Generation</legend>
+                    <div class="col">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="difficulty" id="gridRadios1" value="0">
+                        <label class="form-check-label" for="gridRadios1">
+                          Easy
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="difficulty" id="gridRadios2" value="1" checked>
+                        <label class="form-check-label" for="gridRadios2">
+                          Medium
+                        </label>
+                      </div>
+                      <div class="form-check disabled">
+                        <input class="form-check-input" type="radio" name="difficulty" id="gridRadios3" value="2">
+                        <label class="form-check-label" for="gridRadios3">
+                          Hard
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <div class="form-group row">
+                  <div class="col">Show Incorrect Values</em></div>
+                  <div class="col-sm-10">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="showIncorrectValues">
+                      <label class="form-check-label" for="gridCheck1">
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="game.closeSettings()">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="game.changeSettings()">Save changes</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="SettingsModal" tabindex="-1" role="dialog" aria-labelledby="SettingsModal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="SettingsModalLabel">Settings</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <fieldset class="form-group">
-                <div class="row">
-                  <legend class="col-form-label col-sm-2 pt-0">Difficulty Used in Puzzle Generation</legend>
-                  <div class="col">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="difficulty" id="gridRadios1" value="0">
-                      <label class="form-check-label" for="gridRadios1">
-                        Easy
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="difficulty" id="gridRadios2" value="1" checked>
-                      <label class="form-check-label" for="gridRadios2">
-                        Medium
-                      </label>
-                    </div>
-                    <div class="form-check disabled">
-                      <input class="form-check-input" type="radio" name="difficulty" id="gridRadios3" value="2">
-                      <label class="form-check-label" for="gridRadios3">
-                        Hard
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-              <div class="form-group row">
-                <div class="col">Show Incorrect Values</em></div>
-                <div class="col-sm-10">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="showIncorrectValues">
-                    <label class="form-check-label" for="gridCheck1">
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="game.closeSettings()">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="game.changeSettings()">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <script src="dist/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

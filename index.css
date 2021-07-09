@@ -1,4 +1,8 @@
 html, body {
+    overflow: auto;
+}
+
+.wrapper {
     width: 100vw;
     height: 100vh;
     background: linear-gradient(#77A9BB, #5594AA);
@@ -26,8 +30,8 @@ td {
     width: 2em; */
     padding: 10px;
     text-align: center;
-    border-right: 0.5px solid rgb(190, 190, 190);;
-    border-bottom: 0.5px solid rgb(190, 190, 190);;
+    border-right: 0.5px solid rgb(190, 190, 190);
+    border-bottom: 0.5px solid rgb(190, 190, 190);
 }
 
 td:first-child {
@@ -72,6 +76,11 @@ tr:nth-child(3n) td {
 
 .TopContainer {
     margin-bottom: 50px;
+    overflow: hidden;
+}
+
+.main {
+    overflow: hidden;
 }
 
 #GameDescription a {
@@ -80,4 +89,5 @@ tr:nth-child(3n) td {
 
 .modal {
     color: black;
+    overflow: hidden;
 }
