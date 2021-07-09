@@ -1,60 +1,60 @@
 export default class Board {
     /* Public */
     constructor() {
-        this.#data = Array();
+        this.data = Array();
     }
 
     getData() {
-        return this.#data;
+        return this.data;
     }
 
     setData(data) {
-        this.#data = data.map(inner => inner.slice(0));
+        this.data = data.map(inner => inner.slice(0));
     }
 
     getActiveRowIndex() {
-        return this.#activeRowIndex;
+        return this.activeRowIndex;
     }
 
     setActiveRowIndex(rowIndex) {
-        this.#activeRowIndex = rowIndex;
+        this.activeRowIndex = rowIndex;
     }
 
     getActiveColumnIndex() {
-        return this.#activeColumnIndex;
+        return this.activeColumnIndex;
     }
 
     setActiveColumnIndex(columnIndex) {
-        this.#activeColumnIndex = columnIndex;
+        this.activeColumnIndex = columnIndex;
     }
 
     updateCurrentCellValue(value) {
-        if(this.#activeRowIndex != null && this.#activeColumnIndex != null){
+        if(this.activeRowIndex != null && this.activeColumnIndex != null){
             //update board data
-            this.#data[this.#activeRowIndex][this.#activeColumnIndex] = value;
+            this.data[this.activeRowIndex][this.activeColumnIndex] = value;
         }
     }
 
     deleteCurrentCellValue(table) {
-        if(this.#activeRowIndex != null && this.#activeColumnIndex != null) {
-            this.#data[this.#activeRowIndex][this.#activeColumnIndex] = 0;
+        if(this.activeRowIndex != null && this.activeColumnIndex != null) {
+            this.data[this.activeRowIndex][this.activeColumnIndex] = 0;
         }
     }
 
     getRow(index) {
-        return this.#data[index];
+        return this.data[index];
     }
 
     getColumn(index) {
         let column;
-        this.#data.forEach(row => {
+        this.data.forEach(row => {
             column.push(row[index]);
         });
         return column;
     }
 
     /* Private */
-    #data;
-    #activeRowIndex;
-    #activeColumnIndex;
+    data;
+    activeRowIndex;
+    activeColumnIndex;
 }
