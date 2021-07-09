@@ -15,5 +15,7 @@ module.exports = {
         indent: ['error', 4],
         'linebreak-style': ['error', 'windows'],
         'no-plusplus': 'off',
+        'class-methods-use-this': 'off',
+        'no-param-reassign': 'off',
     },
 };
