@@ -269,22 +269,29 @@ class Game {
     }
 
     changeActiveCell(e) {
+        console.log('beginning logs');
         console.log(e);
+        console.log('logging path elements');
         e.path.forEach((element) => {
             console.log(element);
         });
+        console.log('logging path');
         console.log(e.path);
         const { rowIndex } = e.path[1];
         const { cellIndex } = e.path[0];
+        console.log('logging indices');
         console.log(rowIndex, cellIndex);
         this.gameBoard.setActiveRowIndex(rowIndex);
         this.gameBoard.setActiveColumnIndex(cellIndex);
+        console.log('highlighting table');
         this.highlightTable();
+        console.log('done logging event');
     }
 
     highlightTable() {
         const activeRowIndex = this.gameBoard.getActiveRowIndex();
         const activeColumnIndex = this.gameBoard.getActiveColumnIndex();
+        console.log('active row and column index', activeRowIndex, activeColumnIndex);
         // reset all cells background color to default
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
