@@ -7,7 +7,9 @@ export default class Game {
 
     constructor() {
         this.table = null;
-        this.gameBoard = null;
+        this.gameBoard = new Board();
+        this.sudokuSolver = new Solver();
+        this.settings = new Settings();
         this.initialBoard = null;
         this.finishedGrid = null;
     }
@@ -62,14 +64,14 @@ export default class Game {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 const cell = this.table.rows[i].cells[j];
-                cell.style.background = Settings.BACKGROUND_COLOR;
+                cell.style.background = this.settings.BACKGROUND_COLOR;
                 if (this.initialBoard[i][j] === 0) {
                     // player input value
                     if (data[i][j] !== this.finishedGrid[i][j]) {
-                        cell.style.background = Settings.INCORRECT_COLOR;
+                        cell.style.background = this.settings.INCORRECT_COLOR;
                         solved = false;
                     } else {
-                        cell.style.background = Settings.CORRECT_COLOR;
+                        cell.style.background = this.settings.CORRECT_COLOR;
                     }
                 }
             }
@@ -87,7 +89,7 @@ export default class Game {
         // get difficulty settings
         const difficultyRadios = document.getElementsByName('difficulty');
         for (let i = 0; i < difficultyRadios.length; i++) {
-            if (i === Settings.difficulty) {
+            if (i === this.settings.difficulty) {
                 difficultyRadios[i].checked = true;
             } else {
                 difficultyRadios[i].checked = false;
@@ -96,7 +98,7 @@ export default class Game {
 
         // get show incorrect values settings
         const showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
-        showIncorrectValuesCheckBox.checked = Settings.showIncorrectValues;
+        showIncorrectValuesCheckBox.checked = this.settings.showIncorrectValues;
     }
 
     changeSettings() {
@@ -104,13 +106,13 @@ export default class Game {
         const difficultyRadios = document.getElementsByName('difficulty');
         for (let i = 0; i < difficultyRadios.length; i++) {
             if (difficultyRadios[i].checked) {
-                Settings.difficulty = i;
+                this.settings.difficulty = i;
             }
         }
 
         // get show incorrect values settings
         const showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
-        Settings.showIncorrectValues = showIncorrectValuesCheckBox.checked;
+        this.settings.showIncorrectValues = showIncorrectValuesCheckBox.checked;
         // color previous incorrect inputs
         const data = this.gameBoard.getData();
         for (let i = 0; i < 9; i++) {
@@ -118,8 +120,9 @@ export default class Game {
                 if (
                     this.initialBoard[i][j] === 0
                     && this.finishedGrid[i][j] !== data[i][j]) {
-                    this.table.rows[i].cells[j].style.color = Settings.showIncorrectValues
-                        ? Settings.INCORRECT_INPUT_VALUE_COLOR : Settings.INPUT_VALUE_COLOR;
+                    this.table.rows[i].cells[j].style.color = this.settings.showIncorrectValues
+                        ? this.settings.INCORRECT_INPUT_VALUE_COLOR
+                        : this.settings.INPUT_VALUE_COLOR;
                 }
             }
         }
@@ -130,7 +133,6 @@ export default class Game {
 
         // generate game board
         this.initialBoard = this.generateSudokuBoard();
-        this.gameBoard = new Board();
         this.gameBoard.setData(this.initialBoard);
         // create sudoku grid in table
 
@@ -155,7 +157,6 @@ export default class Game {
     }
 
     generateSudokuBoard() {
-        console.log('generating sudoku board...');
         // 0 represents an empty space
         const emptyBoard = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -169,12 +170,11 @@ export default class Game {
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
 
-        this.finishedGrid = Solver.solveEmptyBoard(emptyBoard, 0, 0);
-        console.log(this.finishedGrid);
+        this.finishedGrid = this.sudokuSolver.solveEmptyBoard(emptyBoard, 0, 0);
         const grid = this.finishedGrid.map((inner) => inner.slice(0));
 
         // Remove cells from the finish grid as long as there is still only one solution
-        let numRemovedCells = Settings.getNumberOfInitialEmptyCells();
+        let numRemovedCells = this.settings.getNumberOfInitialEmptyCells();
         while (numRemovedCells > 0) {
             // Pick random row and column indices
             const rowIndex = Math.floor(Math.random() * 9);
@@ -190,7 +190,7 @@ export default class Game {
             const gridCopy = grid.map((inner) => inner.slice(0));
             gridCopy[rowIndex][columnIndex] = 0;
             const solutions = [[[]]];
-            Solver.solve(gridCopy, 0, 0, solutions);
+            this.sudokuSolver.solve(gridCopy, 0, 0, solutions);
             if (solutions.length === 2) {
                 // only found one solution not including the empty array
                 grid[rowIndex][columnIndex] = 0;
@@ -227,12 +227,12 @@ export default class Game {
                     // update table cells
                     const cell = this.table.rows[activeRowIndex].cells[activeColumnIndex];
                     cell.innerHTML = value.toString();
-                    if (Settings.showIncorrectValues
+                    if (this.settings.showIncorrectValues
                         && this.finishedGrid[activeRowIndex][activeColumnIndex] !== value
                     ) {
-                        cell.style.color = Settings.INCORRECT_INPUT_VALUE_COLOR;
+                        cell.style.color = this.settings.INCORRECT_INPUT_VALUE_COLOR;
                     } else {
-                        cell.style.color = Settings.INPUT_VALUE_COLOR;
+                        cell.style.color = this.settings.INPUT_VALUE_COLOR;
                     }
                     // update game board
                     this.gameBoard.updateCurrentCellValue(value);
@@ -250,7 +250,7 @@ export default class Game {
             && this.initialBoard[activeRowIndex][activeColumnIndex] === 0
         ) {
             this.table.rows[activeRowIndex].cells[activeColumnIndex].innerHTML = '&nbsp';
-            this.gameBoard.deleteCurrentCellValue(this.table);
+            this.gameBoard.deleteCurrentCellValue();
         }
     }
 
@@ -258,6 +258,8 @@ export default class Game {
         console.log(e);
         const { rowIndex } = e.path[1];
         const { cellIndex } = e.path[0];
+        console.log(rowIndex, cellIndex);
+        console.log(typeof rowIndex, typeof cellIndex);
         this.gameBoard.setActiveRowIndex(rowIndex);
         this.gameBoard.setActiveColumnIndex(cellIndex);
         this.highlightTable();
@@ -269,7 +271,7 @@ export default class Game {
         // reset all cells background color to default
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
-                this.table.rows[i].cells[j].style.background = Settings.BACKGROUND_COLOR;
+                this.table.rows[i].cells[j].style.background = this.settings.BACKGROUND_COLOR;
                 this.table.rows[i].cells[j].style.fontWeight = 'normal';
             }
         }
@@ -277,21 +279,22 @@ export default class Game {
         // change column and row color to lighter than the active cell
         for (let i = 0; i < 9; i++) {
             // eslint-disable-next-line max-len
-            this.table.rows[i].cells[activeColumnIndex].style.background = Settings.CELL_AFFECT_COLOR;
-            this.table.rows[activeRowIndex].cells[i].style.background = Settings.CELL_AFFECT_COLOR;
+            this.table.rows[i].cells[activeColumnIndex].style.background = this.settings.CELL_AFFECT_COLOR;
+            // eslint-disable-next-line max-len
+            this.table.rows[activeRowIndex].cells[i].style.background = this.settings.CELL_AFFECT_COLOR;
         }
 
         // changes 3 by 3 box of active cell to same color as active row and column
-        const boxPos = Solver.getBoxPosition(activeRowIndex, activeColumnIndex);
+        const boxPos = this.sudokuSolver.getBoxPosition(activeRowIndex, activeColumnIndex);
         for (let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
             for (let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
-                this.table.rows[i].cells[j].style.background = Settings.CELL_AFFECT_COLOR;
+                this.table.rows[i].cells[j].style.background = this.settings.CELL_AFFECT_COLOR;
             }
         }
 
         // give dark background to active cell and bold the text
         // eslint-disable-next-line max-len
-        this.table.rows[activeRowIndex].cells[activeColumnIndex].style.background = Settings.ACTIVE_CELL_COLOR;
+        this.table.rows[activeRowIndex].cells[activeColumnIndex].style.background = this.settings.ACTIVE_CELL_COLOR;
         this.table.rows[activeRowIndex].cells[activeColumnIndex].style.fontWeight = 'bold';
     }
 }

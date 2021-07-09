@@ -21,7 +21,9 @@ class Game {
 
     constructor() {
         this.table = null;
-        this.gameBoard = null;
+        this.gameBoard = new _board__WEBPACK_IMPORTED_MODULE_0__.default();
+        this.sudokuSolver = new _solver__WEBPACK_IMPORTED_MODULE_1__.default();
+        this.settings = new _settings__WEBPACK_IMPORTED_MODULE_2__.default();
         this.initialBoard = null;
         this.finishedGrid = null;
     }
@@ -76,14 +78,14 @@ class Game {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 const cell = this.table.rows[i].cells[j];
-                cell.style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.BACKGROUND_COLOR;
+                cell.style.background = this.settings.BACKGROUND_COLOR;
                 if (this.initialBoard[i][j] === 0) {
                     // player input value
                     if (data[i][j] !== this.finishedGrid[i][j]) {
-                        cell.style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.INCORRECT_COLOR;
+                        cell.style.background = this.settings.INCORRECT_COLOR;
                         solved = false;
                     } else {
-                        cell.style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.CORRECT_COLOR;
+                        cell.style.background = this.settings.CORRECT_COLOR;
                     }
                 }
             }
@@ -101,7 +103,7 @@ class Game {
         // get difficulty settings
         const difficultyRadios = document.getElementsByName('difficulty');
         for (let i = 0; i < difficultyRadios.length; i++) {
-            if (i === _settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty) {
+            if (i === this.settings.difficulty) {
                 difficultyRadios[i].checked = true;
             } else {
                 difficultyRadios[i].checked = false;
@@ -110,7 +112,7 @@ class Game {
 
         // get show incorrect values settings
         const showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
-        showIncorrectValuesCheckBox.checked = _settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues;
+        showIncorrectValuesCheckBox.checked = this.settings.showIncorrectValues;
     }
 
     changeSettings() {
@@ -118,13 +120,13 @@ class Game {
         const difficultyRadios = document.getElementsByName('difficulty');
         for (let i = 0; i < difficultyRadios.length; i++) {
             if (difficultyRadios[i].checked) {
-                _settings__WEBPACK_IMPORTED_MODULE_2__.default.difficulty = i;
+                this.settings.difficulty = i;
             }
         }
 
         // get show incorrect values settings
         const showIncorrectValuesCheckBox = document.getElementById('showIncorrectValues');
-        _settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues = showIncorrectValuesCheckBox.checked;
+        this.settings.showIncorrectValues = showIncorrectValuesCheckBox.checked;
         // color previous incorrect inputs
         const data = this.gameBoard.getData();
         for (let i = 0; i < 9; i++) {
@@ -132,8 +134,9 @@ class Game {
                 if (
                     this.initialBoard[i][j] === 0
                     && this.finishedGrid[i][j] !== data[i][j]) {
-                    this.table.rows[i].cells[j].style.color = _settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues
-                        ? _settings__WEBPACK_IMPORTED_MODULE_2__.default.INCORRECT_INPUT_VALUE_COLOR : _settings__WEBPACK_IMPORTED_MODULE_2__.default.INPUT_VALUE_COLOR;
+                    this.table.rows[i].cells[j].style.color = this.settings.showIncorrectValues
+                        ? this.settings.INCORRECT_INPUT_VALUE_COLOR
+                        : this.settings.INPUT_VALUE_COLOR;
                 }
             }
         }
@@ -144,7 +147,6 @@ class Game {
 
         // generate game board
         this.initialBoard = this.generateSudokuBoard();
-        this.gameBoard = new _board__WEBPACK_IMPORTED_MODULE_0__.default();
         this.gameBoard.setData(this.initialBoard);
         // create sudoku grid in table
 
@@ -169,7 +171,6 @@ class Game {
     }
 
     generateSudokuBoard() {
-        console.log('generating sudoku board...');
         // 0 represents an empty space
         const emptyBoard = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -183,12 +184,11 @@ class Game {
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
 
-        this.finishedGrid = _solver__WEBPACK_IMPORTED_MODULE_1__.default.solveEmptyBoard(emptyBoard, 0, 0);
-        console.log(this.finishedGrid);
+        this.finishedGrid = this.sudokuSolver.solveEmptyBoard(emptyBoard, 0, 0);
         const grid = this.finishedGrid.map((inner) => inner.slice(0));
 
         // Remove cells from the finish grid as long as there is still only one solution
-        let numRemovedCells = _settings__WEBPACK_IMPORTED_MODULE_2__.default.getNumberOfInitialEmptyCells();
+        let numRemovedCells = this.settings.getNumberOfInitialEmptyCells();
         while (numRemovedCells > 0) {
             // Pick random row and column indices
             const rowIndex = Math.floor(Math.random() * 9);
@@ -204,7 +204,7 @@ class Game {
             const gridCopy = grid.map((inner) => inner.slice(0));
             gridCopy[rowIndex][columnIndex] = 0;
             const solutions = [[[]]];
-            _solver__WEBPACK_IMPORTED_MODULE_1__.default.solve(gridCopy, 0, 0, solutions);
+            this.sudokuSolver.solve(gridCopy, 0, 0, solutions);
             if (solutions.length === 2) {
                 // only found one solution not including the empty array
                 grid[rowIndex][columnIndex] = 0;
@@ -241,12 +241,12 @@ class Game {
                     // update table cells
                     const cell = this.table.rows[activeRowIndex].cells[activeColumnIndex];
                     cell.innerHTML = value.toString();
-                    if (_settings__WEBPACK_IMPORTED_MODULE_2__.default.showIncorrectValues
+                    if (this.settings.showIncorrectValues
                         && this.finishedGrid[activeRowIndex][activeColumnIndex] !== value
                     ) {
-                        cell.style.color = _settings__WEBPACK_IMPORTED_MODULE_2__.default.INCORRECT_INPUT_VALUE_COLOR;
+                        cell.style.color = this.settings.INCORRECT_INPUT_VALUE_COLOR;
                     } else {
-                        cell.style.color = _settings__WEBPACK_IMPORTED_MODULE_2__.default.INPUT_VALUE_COLOR;
+                        cell.style.color = this.settings.INPUT_VALUE_COLOR;
                     }
                     // update game board
                     this.gameBoard.updateCurrentCellValue(value);
@@ -264,7 +264,7 @@ class Game {
             && this.initialBoard[activeRowIndex][activeColumnIndex] === 0
         ) {
             this.table.rows[activeRowIndex].cells[activeColumnIndex].innerHTML = '&nbsp';
-            this.gameBoard.deleteCurrentCellValue(this.table);
+            this.gameBoard.deleteCurrentCellValue();
         }
     }
 
@@ -272,6 +272,8 @@ class Game {
         console.log(e);
         const { rowIndex } = e.path[1];
         const { cellIndex } = e.path[0];
+        console.log(rowIndex, cellIndex);
+        console.log(typeof rowIndex, typeof cellIndex);
         this.gameBoard.setActiveRowIndex(rowIndex);
         this.gameBoard.setActiveColumnIndex(cellIndex);
         this.highlightTable();
@@ -283,7 +285,7 @@ class Game {
         // reset all cells background color to default
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
-                this.table.rows[i].cells[j].style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.BACKGROUND_COLOR;
+                this.table.rows[i].cells[j].style.background = this.settings.BACKGROUND_COLOR;
                 this.table.rows[i].cells[j].style.fontWeight = 'normal';
             }
         }
@@ -291,21 +293,22 @@ class Game {
         // change column and row color to lighter than the active cell
         for (let i = 0; i < 9; i++) {
             // eslint-disable-next-line max-len
-            this.table.rows[i].cells[activeColumnIndex].style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.CELL_AFFECT_COLOR;
-            this.table.rows[activeRowIndex].cells[i].style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.CELL_AFFECT_COLOR;
+            this.table.rows[i].cells[activeColumnIndex].style.background = this.settings.CELL_AFFECT_COLOR;
+            // eslint-disable-next-line max-len
+            this.table.rows[activeRowIndex].cells[i].style.background = this.settings.CELL_AFFECT_COLOR;
         }
 
         // changes 3 by 3 box of active cell to same color as active row and column
-        const boxPos = _solver__WEBPACK_IMPORTED_MODULE_1__.default.getBoxPosition(activeRowIndex, activeColumnIndex);
+        const boxPos = this.sudokuSolver.getBoxPosition(activeRowIndex, activeColumnIndex);
         for (let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
             for (let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
-                this.table.rows[i].cells[j].style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.CELL_AFFECT_COLOR;
+                this.table.rows[i].cells[j].style.background = this.settings.CELL_AFFECT_COLOR;
             }
         }
 
         // give dark background to active cell and bold the text
         // eslint-disable-next-line max-len
-        this.table.rows[activeRowIndex].cells[activeColumnIndex].style.background = _settings__WEBPACK_IMPORTED_MODULE_2__.default.ACTIVE_CELL_COLOR;
+        this.table.rows[activeRowIndex].cells[activeColumnIndex].style.background = this.settings.ACTIVE_CELL_COLOR;
         this.table.rows[activeRowIndex].cells[activeColumnIndex].style.fontWeight = 'bold';
     }
 }
@@ -352,14 +355,14 @@ class Board {
     }
 
     updateCurrentCellValue(value) {
-        if(this.activeRowIndex != null && this.activeColumnIndex != null){
-            //update board data
+        if (this.activeRowIndex != null && this.activeColumnIndex != null) {
+            // update board data
             this.data[this.activeRowIndex][this.activeColumnIndex] = value;
         }
     }
 
-    deleteCurrentCellValue(table) {
-        if(this.activeRowIndex != null && this.activeColumnIndex != null) {
+    deleteCurrentCellValue() {
+        if (this.activeRowIndex != null && this.activeColumnIndex != null) {
             this.data[this.activeRowIndex][this.activeColumnIndex] = 0;
         }
     }
@@ -370,12 +373,13 @@ class Board {
 
     getColumn(index) {
         let column;
-        this.data.forEach(row => {
+        this.data.forEach((row) => {
             column.push(row[index]);
         });
         return column;
     }
 }
+
 
 /***/ }),
 /* 3 */
@@ -387,7 +391,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 class Solver {
     /* Public */
-    static solveEmptyBoard(data, rowIndex, columnIndex) {
+    solveEmptyBoard(data, rowIndex, columnIndex) {
         // we've reached the end of the board
         if (rowIndex > 8) {
             return data;
@@ -400,7 +404,7 @@ class Solver {
         }
 
         // if current cell has a value go to next cell
-        if (data[rowIndex][columnIndex] != 0) {
+        if (data[rowIndex][columnIndex] !== 0) {
             columnIndex++;
             return this.solveEmptyBoard(data, rowIndex, columnIndex);
         }
@@ -436,7 +440,7 @@ class Solver {
         return null;
     }
 
-    static solve(data, rowIndex, columnIndex, solutions) {
+    solve(data, rowIndex, columnIndex, solutions) {
         // we've reached the end of the board
         if (rowIndex > 8) {
             return data;
@@ -449,7 +453,7 @@ class Solver {
         }
 
         // if current cell has a value go to next cell
-        if (data[rowIndex][columnIndex] != 0) {
+        if (data[rowIndex][columnIndex] !== 0) {
             columnIndex++;
             return this.solve(data, rowIndex, columnIndex, solutions);
         }
@@ -485,12 +489,12 @@ class Solver {
         return null;
     }
 
-    static isValid(rowIndex, columnIndex, value, data) {
+    isValid(rowIndex, columnIndex, value, data) {
         // check if value is row and column valid
         for (let i = 0; i < 9; i++) {
             if (
-                (data[rowIndex][i] == value && i != columnIndex)
-                || (data[i][columnIndex] == value && i != rowIndex)
+                (data[rowIndex][i] === value && i !== columnIndex)
+                || (data[i][columnIndex] === value && i !== rowIndex)
             ) {
                 return false;
             }
@@ -500,7 +504,7 @@ class Solver {
         const boxPos = this.getBoxPosition(rowIndex, columnIndex);
         for (let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
             for (let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
-                if (data[i][j] == value && i != rowIndex && j != columnIndex) {
+                if (data[i][j] === value && i !== rowIndex && j !== columnIndex) {
                     return false;
                 }
             }
@@ -509,7 +513,7 @@ class Solver {
         return true;
     }
 
-    static isSolved(data) {
+    isSolved(data) {
         // go through board and check if every cell is valid
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].length; j++) {
@@ -521,7 +525,7 @@ class Solver {
         return true;
     }
 
-    static getBoxPosition(rowIndex, columnIndex) {
+    getBoxPosition(rowIndex, columnIndex) {
         let rowBegin;
         let rowEnd;
         let columnBegin;
@@ -574,37 +578,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Settings)
 /* harmony export */ });
-//Substitute for enums since javascript doesn't support enums
-const difficulties = {
+// Substitute for enums since javascript doesn't support enums
+const DIFFICULTIES = {
     EASY: 0,
     MEDIUM: 1,
-    HARD: 2
-}
+    HARD: 2,
+};
 
 class Settings {
-    static BACKGROUND_COLOR = 'white'; // Color of the non-active cells
-    static ACTIVE_CELL_COLOR = 'rgb(200,200,210)'; // Color of the current active cell
-    static CELL_AFFECT_COLOR = 'rgb(230,230,240)'; // Color of the row, column, and box of active cell
-    static CORRECT_COLOR = 'rgb(220,255,220)'; // Color of the correct cells after checking solution
-    static INCORRECT_COLOR = 'rgb(255,220,220)'; // Color of the incorrect cells after checking solution
-    static INPUT_VALUE_COLOR = 'blue'; // Color of the input text
-    static INCORRECT_INPUT_VALUE_COLOR = 'red'; //Color of the input text if it is incorrect and show incorrect values is true
-    static difficulty = difficulties.MEDIUM; //Difficulty of new generated puzzles
-    static showIncorrectValues = false; //Flag that allows the player to see if an input is incorrect if flag is set to true
-
-    static getNumberOfInitialEmptyCells() {
-        switch(this.difficulty) {
-            case difficulties.EASY:
-                return 30;
-            case difficulties.MEDIUM:
-                return 40;
-            case difficulties.HARD:
-                return 50;
-        }
+    constructor() {
+        this.BACKGROUND_COLOR = 'white'; // Color of the non-active cells
+        this.ACTIVE_CELL_COLOR = 'rgb(200,200,210)'; // Color of the current active cell
+        this.CELL_AFFECT_COLOR = 'rgb(230,230,240)'; // Color of the row, column, and box of active cell
+        this.CORRECT_COLOR = 'rgb(220,255,220)'; // Color of the correct cells after checking solution
+        this.INCORRECT_COLOR = 'rgb(255,220,220)'; // Color of the incorrect cells after checking solution
+        this.INPUT_VALUE_COLOR = 'blue'; // Color of the input text
+        this.INCORRECT_INPUT_VALUE_COLOR = 'red'; // Color of the input text if it is incorrect and show incorrect values is true
+        this.difficulty = DIFFICULTIES.MEDIUM; // Difficulty of new generated puzzles
+        this.showIncorrectValues = false; // Flag that if true show if an input is incorrect
     }
 
-
+    getNumberOfInitialEmptyCells() {
+        switch (this.difficulty) {
+        case DIFFICULTIES.EASY:
+            return 30;
+        case DIFFICULTIES.MEDIUM:
+            return 40;
+        case DIFFICULTIES.HARD:
+            return 50;
+        default:
+            return 30;
+        }
+    }
 }
+
 
 /***/ })
 /******/ 	]);
@@ -669,8 +676,10 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sudoku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
+
 const game = new _sudoku__WEBPACK_IMPORTED_MODULE_0__.default();
 window.game = game;
+
 })();
 
 /******/ })()

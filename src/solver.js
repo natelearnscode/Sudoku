@@ -1,6 +1,6 @@
 export default class Solver {
     /* Public */
-    static solveEmptyBoard(data, rowIndex, columnIndex) {
+    solveEmptyBoard(data, rowIndex, columnIndex) {
         // we've reached the end of the board
         if (rowIndex > 8) {
             return data;
@@ -13,7 +13,7 @@ export default class Solver {
         }
 
         // if current cell has a value go to next cell
-        if (data[rowIndex][columnIndex] != 0) {
+        if (data[rowIndex][columnIndex] !== 0) {
             columnIndex++;
             return this.solveEmptyBoard(data, rowIndex, columnIndex);
         }
@@ -49,7 +49,7 @@ export default class Solver {
         return null;
     }
 
-    static solve(data, rowIndex, columnIndex, solutions) {
+    solve(data, rowIndex, columnIndex, solutions) {
         // we've reached the end of the board
         if (rowIndex > 8) {
             return data;
@@ -62,7 +62,7 @@ export default class Solver {
         }
 
         // if current cell has a value go to next cell
-        if (data[rowIndex][columnIndex] != 0) {
+        if (data[rowIndex][columnIndex] !== 0) {
             columnIndex++;
             return this.solve(data, rowIndex, columnIndex, solutions);
         }
@@ -98,12 +98,12 @@ export default class Solver {
         return null;
     }
 
-    static isValid(rowIndex, columnIndex, value, data) {
+    isValid(rowIndex, columnIndex, value, data) {
         // check if value is row and column valid
         for (let i = 0; i < 9; i++) {
             if (
-                (data[rowIndex][i] == value && i != columnIndex)
-                || (data[i][columnIndex] == value && i != rowIndex)
+                (data[rowIndex][i] === value && i !== columnIndex)
+                || (data[i][columnIndex] === value && i !== rowIndex)
             ) {
                 return false;
             }
@@ -113,7 +113,7 @@ export default class Solver {
         const boxPos = this.getBoxPosition(rowIndex, columnIndex);
         for (let i = boxPos.rowBegin; i < boxPos.rowEnd; i++) {
             for (let j = boxPos.columnBegin; j < boxPos.columnEnd; j++) {
-                if (data[i][j] == value && i != rowIndex && j != columnIndex) {
+                if (data[i][j] === value && i !== rowIndex && j !== columnIndex) {
                     return false;
                 }
             }
@@ -122,7 +122,7 @@ export default class Solver {
         return true;
     }
 
-    static isSolved(data) {
+    isSolved(data) {
         // go through board and check if every cell is valid
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].length; j++) {
@@ -134,7 +134,7 @@ export default class Solver {
         return true;
     }
 
-    static getBoxPosition(rowIndex, columnIndex) {
+    getBoxPosition(rowIndex, columnIndex) {
         let rowBegin;
         let rowEnd;
         let columnBegin;

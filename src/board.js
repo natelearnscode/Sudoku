@@ -31,14 +31,14 @@ export default class Board {
     }
 
     updateCurrentCellValue(value) {
-        if(this.activeRowIndex != null && this.activeColumnIndex != null){
-            //update board data
+        if (this.activeRowIndex != null && this.activeColumnIndex != null) {
+            // update board data
             this.data[this.activeRowIndex][this.activeColumnIndex] = value;
         }
     }
 
-    deleteCurrentCellValue(table) {
-        if(this.activeRowIndex != null && this.activeColumnIndex != null) {
+    deleteCurrentCellValue() {
+        if (this.activeRowIndex != null && this.activeColumnIndex != null) {
             this.data[this.activeRowIndex][this.activeColumnIndex] = 0;
         }
     }
@@ -49,7 +49,7 @@ export default class Board {
 
     getColumn(index) {
         let column;
-        this.data.forEach(row => {
+        this.data.forEach((row) => {
             column.push(row[index]);
         });
         return column;
