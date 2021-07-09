@@ -1,7 +1,9 @@
 export default class Board {
     /* Public */
     constructor() {
-        this.data = Array();
+        this.data = [];
+        this.activeRowIndex = 0;
+        this.activeColumnIndex = 0;
     }
 
     getData() {
@@ -52,9 +54,4 @@ export default class Board {
         });
         return column;
     }
-
-    /* Private */
-    data;
-    activeRowIndex;
-    activeColumnIndex;
 }

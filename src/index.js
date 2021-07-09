@@ -1,3 +1,3 @@
 import Game from './sudoku';
-
-window.Game = Game;
+const game = new Game();
+window.game = game;
