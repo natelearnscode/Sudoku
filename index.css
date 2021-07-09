@@ -32,24 +32,24 @@ tbody, td, tfoot, th, thead, tr {
 td {
     padding: 10px;
     text-align: center;
-    border-right: 0.5px solid rgb(190, 190, 190);
-    border-bottom: 0.5px solid rgb(190, 190, 190);
+    border-right: thin solid rgb(54, 54, 54);
+    border-bottom: thin solid rgb(54, 54, 54);
 }
 
 td:first-child {
-    border-left: solid black;
+    border-left: medium solid black;
 }
 
 td:nth-child(3n) {
-    border-right: solid black;
+    border-right: medium solid black;
 }
 
 tr:first-child {
-    border-top: solid black;
+    border-top: medium solid black;
 }
 
 tr:nth-child(3n) td {
-    border-bottom: solid black;
+    border-bottom: medium solid black;
 }
 
 .btn-outline-secondary {

@@ -255,20 +255,14 @@ export default class Game {
     }
 
     changeActiveCell(e) {
-        console.log('beginning logs');
-        console.log(e);
-        console.log(e.target.closest('tr').rowIndex);
-        console.log(e.target.cellIndex);
         this.gameBoard.activeRowIndex = e.target.closest('tr').rowIndex;
         this.gameBoard.activeColumnIndex = e.target.cellIndex;
         this.highlightTable();
-        console.log('done logging event');
     }
 
     highlightTable() {
         const activeRowIndex = this.gameBoard.getActiveRowIndex();
         const activeColumnIndex = this.gameBoard.getActiveColumnIndex();
-        console.log('active row and column index', activeRowIndex, activeColumnIndex, this.gameBoard.activeColumnIndex);
         // reset all cells background color to default
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
